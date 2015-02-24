@@ -1,3 +1,3 @@
-# Web components using Polymer
+# Polymer elements
 
 Dipping toes in water
