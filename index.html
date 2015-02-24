@@ -1,21 +1,28 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Polymer demo page</title>
-	<link rel="stylesheet" type="text/css" href="styles/shared.css" media="screen">
-	<style>
-		
-	</style>
+	<!-- 1. Load platform support before any code that touches the DOM. -->
+	<script src="bower_components/webcomponentsjs/webcomponents.min.js"></script>
+	<!-- 2. Load the component using an HTML Import -->
+	<link rel="import" href="elements/my-element.html">
+	<link rel="import" href="elements/proto-element.html">
+	<link rel="import" href="elements/ready-element.html">
+	<link rel="import" href="elements/name-tag.html">
+	<link rel="import" href="elements/fav-colour.html">
+	<link rel="import" href="elements/age-slider.html">
+	<link rel="import" href="elements/color-picker.html">
+	<link rel="import" href="elements/editable-color-picker.html">
 </head>
 <body>
-
-
-<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script> -->
-<script src=""></script>
-
-<script>
-
-</script>
+	<!-- 3. Declare the element by its tag. -->
+	<my-element></my-element>
+	<proto-element></proto-element>
+	<ready-element></ready-element>
+	<name-tag></name-tag>
+	<fav-color></fav-color>
+	<age-slider></age-slider>
+	<color-picker owner="Scott" color="blue"></color-picker>
+	<editable-color-picker></editable-color-picker>
 
 </body>
 </html>
