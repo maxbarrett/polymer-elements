@@ -1,7 +1,11 @@
-<link rel="import" href="/components/polymer/polymer.html">
+<link rel="import" href="../bower_components/polymer/polymer.html">
 
 <polymer-element name="editable-color-picker" attributes="owner color">
 	<template>
+		<style>
+			:host { display:block; margin-bottom:20px; border-bottom:1px solid gray; }
+		</style>
+		
 		<p>
 			This is a <strong>{{owner}}</strong>'s editable-color-picker.
 			He likes the color <b style="color: {{color}}">{{color}}</b>.

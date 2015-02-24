@@ -1,9 +1,16 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/core-ajax/core-ajax.html">
 
-
 <polymer-element name="my-element" noscript>
 	<template>
-		<span>Hello from <b>my-element</b>. This is my Shadow DOM.</span>
+		<style>
+			:host { border-bottom:1px solid gray; }
+			:host,
+			textarea { display:block; margin-bottom:20px; }
+		</style>
+		
+		<span>I'm <b>my-element</b>. This is my Shadow DOM.</span>
+		<core-ajax url="http://baconipsum.com/api/?type=meat-and-filler" auto response="{{resp}}"></core-ajax>
+		<textarea value="{{resp}}"></textarea>
 	</template>
 </polymer-element>
