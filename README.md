@@ -1,6 +1,6 @@
 # Polymer elements
 
-Dipping toes in water
+Dipping toes in water [demo](http://maxbarrett.github.io/polymer-elements).
 
 ###Added custom elements:
 - Age slider
