@@ -1,0 +1,210 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<polymer-element name="slide-show">
+
+	<template>
+
+		<style>
+
+			/* Carousel */
+			:host { display:block; max-width: 710px;  overflow:hidden; position: relative; border-radius:5px; border: 1px solid gray; box-sizing:border-box; }
+			.outer { position:relative; list-style: none; width: 2000%; margin: 0; overflow: hidden; max-height: 272px; -webkit-perspective: 1000; left:-500px; }
+			::content img { display:block; float: left; width: 100%; max-width:600px; position: relative; }
+
+			.slider-previous,
+			.slider-next { background-color:gray; background-repeat: no-repeat; background-position: 50% 50%; position: absolute; top:0; display: block; width: 66px; min-width: 30px; bottom:0; cursor: pointer; text-indent: -9999em; z-index: 10; .transition(background-color 0.2s); }
+			.slider-previous { background-image: url('//static.vouchercodes.co.uk/v10/images/homepage/carousel-arrow-left.png'); left:0; border-right: 1px solid gray; }
+			.slider-next { background-image: url('//static.vouchercodes.co.uk/v10/images/homepage/carousel-arrow-right.png'); right:0; border-left: 1px solid gray; }
+
+		</style>
+
+		<a id="jsSliderPrevious" class="slider-previous slider-button">previous</a>
+		<div class="outer">
+			
+			<content>
+
+			</content>
+			
+		</div>
+		<a id="jsSliderNext" class="slider-next slider-button">next</a>
+
+	</template>
+
+	<script>
+
+		Polymer({
+			ready: function() {
+
+				var _ = this;
+
+				var zSlider = {
+
+					timer: null,
+
+					makeArr: function(coll){
+						return Array.prototype.slice.call(coll);
+					},
+
+					get: function(coll, from){
+						from = from || document;
+						return from.querySelectorAll(coll);
+					},
+
+					init: function(slider, interval, speed){
+
+						slider.ul = slider;
+						
+						// How long to spend on each image
+						slider.interval =  interval || 5000;
+						slider.speed 	=  speed || 300;
+
+						// Add the last slide to the beginning
+						//slider.find('ul').prepend(slider.find('li').last());
+
+						var imgs = this.makeArr(this.get('img', _));
+						var last = imgs.pop();
+
+						// Add the last slide to the beginning
+						slider.insertBefore(last, imgs[0]);
+
+
+						this.calcDimensions(slider);
+						this.startTimer(slider);
+
+						// // Pause/Resume autoscroll on hover
+						// if ($('html.no-touch').length) {
+						// 	slider.ul.hover( zSlider.stopTimer, function(){ zSlider.startTimer(slider); });
+						// }
+
+						// // Resize all the things
+						// $(window).on('resize', function(){
+						// 	zSlider.calcDimensions(slider);
+						// });
+					},
+
+					calcDimensions: function (slider) {
+						// Does the slider need buttons?
+						slider.hasButtons = true;
+
+						// Visible area
+						slider._width = slider.clientWidth;
+
+						// Calculate visible area, start/next positions & create buttons if necessary
+						if (slider.hasButtons) {
+							slider.buttonWidth = Math.round(slider._width / 100 * 9.5);
+							slider.visible = slider._width - (slider.buttonWidth * 2);
+							slider.startPos = -slider.visible + slider.buttonWidth;
+							slider.nextPos = (-slider.visible * 2) + slider.buttonWidth;
+							this.createNextPrev(slider);
+							// this.clickHandler(slider); TODO: remove jQuery dependency
+						} else {
+							slider.visible = slider._width;
+							slider.startPos = -slider.visible;
+							slider.nextPos = -slider.visible * 2;
+						}
+
+						// Set the images widths
+						var imgs = this.makeArr(this.get('img', _));
+
+						imgs.forEach(function(current){
+							current.style.width = slider.visible + 'px';
+						})
+
+						// Move all slides left 1 so it looks like we're at the original beginning 
+						// The last slide is now left of the first: [4][1][2][3]... etc
+ 						slider.outer = document.querySelector('slide-show::shadow .outer');
+ 						slider.outer.animate([  {left: '0px'}, 
+ 												{left: slider.startPos + 'px'} ], 
+ 												{duration:0, fill:'forwards'} );
+
+						return slider;
+					},
+
+					createNextPrev: function(slider){
+						// If buttons exist, just adjust the width
+						_.$.jsSliderPrevious.style.width = slider.buttonWidth + 'px';
+						_.$.jsSliderNext.style.width = slider.buttonWidth + 'px';
+					},
+
+					clickHandler: function(slider) {
+						// Setup click handlers for next/previous buttons
+						$('.vcslider-previous, .vcslider-next').off().on('click', function(e){
+							e.preventDefault;
+							zSlider.stopTimer();
+							
+							// Are we going to the next or previous slide?
+							var nextPrev = this.id,
+								distance = (nextPrev === 'js-vcslider-next') ? slider.nextPos : slider.buttonWidth;
+
+							// Move the slides on click
+							zSlider.moveSlides(slider, distance, nextPrev);
+						});
+					},
+
+					startTimer: function(slider){
+						zSlider.timer = setInterval(function(){
+							zSlider.moveSlides(slider, slider.nextPos); 
+						}, slider.interval);
+					},
+
+					stopTimer: function(){
+						clearInterval(zSlider.timer); 
+					},
+
+					moveSlides: function(slider, distance, nextPrev){
+
+						slider.outer.animate([  {left: '0px'}, 
+ 												{left: distance + 'px'} ], 
+ 												{duration: slider.speed, fill:'both'} );
+
+
+						**TODO** Add this as a callback to above animation...
+
+						// append/prepend the first/last slide to the list
+						if (nextPrev === 'jsSliderPrevious') {
+
+							// slider.ul.prepend(slider.ul.find('li').last());
+							var imgs = this.makeArr(this.get('img', _));
+							var last = imgs.pop();
+
+							// Add the last slide to the beginning
+							slider.insertBefore(last, imgs[0]);
+
+						} else {
+
+							//slider.ul.append(slider.ul.find('li').first());
+							var imgs = this.makeArr(this.get('img', _));
+							var first = imgs.shift();
+
+							// Add the first slide to the end
+							slider.parentNode.insertBefore(first, slider.nextSibling);
+						}
+
+						// Reset the position back to start
+						//slider.outer.animate({ left: slider.startPos + 'px'}, 0);
+
+
+
+						// OLD JQUERY IMPLEMENTATION:
+						// slider.outer.animate({left: distance + 'px'}, slider.speed, function(){
+						// 	// append/prepend the first/last slide to the list
+						// 	if (nextPrev === 'js-vcslider-previous') {
+						// 		slider.ul.prepend(slider.ul.find('li').last());
+						// 	} else {
+						// 		slider.ul.append(slider.ul.find('li').first());
+						// 	}
+
+						// 	// Reset the position back to start
+						// 	slider.ul.animate({left: slider.startPos + 'px'}, 0);
+						// });
+					}
+
+				};
+
+				zSlider.init(this);
+
+			} // ready
+		});
+	</script>
+
+</polymer-element>
