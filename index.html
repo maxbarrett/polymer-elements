@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<title>Polymer Elements</title>
 	<!-- 1. Load platform support before any code that touches the DOM. -->
 	<script src="bower_components/webcomponentsjs/webcomponents.min.js"></script>
 	<!-- 2. Load the component using an HTML Import -->
@@ -14,7 +15,11 @@
 	<link rel="import" href="elements/editable-color-picker.html">
 	<link rel="import" href="bower_components/google-map/google-map.html">
 
-	<link rel="stylesheet" type="text/css" href="styles/shared.css">
+	<link rel="stylesheet" type="text/css" href="http://necolas.github.io/normalize.css/latest/normalize.css">
+	<style>
+		google-map { height:500px; width:500px; }
+	</style>
+	
 </head>
 <body>
 	<!-- 3. Declare the element by its tag. -->
